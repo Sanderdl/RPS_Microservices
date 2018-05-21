@@ -1,0 +1,70 @@
+package com.sanderdl.service;
+
+
+import com.sanderdl.domain.Role;
+import com.sanderdl.domain.User;
+import com.sanderdl.exception.ResourceNotFoundException;
+import com.sanderdl.model.JwtUser;
+import com.sanderdl.model.RoleName;
+import com.sanderdl.repository.RoleRepository;
+import com.sanderdl.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class UserService implements UserDetailsService{
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
+    private BCryptPasswordEncoder passwordEncoder;
+
+    public UserService(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public User register(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER);
+        user.getRoles().add(userRole);
+        return userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById (Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(s);
+
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", s));
+        }else {
+
+            List<GrantedAuthority> authorities = user.getRoles().stream()
+                    .map(Role -> new SimpleGrantedAuthority(Role.getName().toString()))
+                    .collect(Collectors.toList());
+
+            return new JwtUser(
+                    user.getUsername(),
+                    user.getPassword(),
+                    authorities
+            );
+        }
+    }
+}
