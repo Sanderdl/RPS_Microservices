@@ -4,7 +4,7 @@ package com.sanderdl.service;
 import com.sanderdl.domain.Role;
 import com.sanderdl.domain.User;
 import com.sanderdl.exception.ResourceNotFoundException;
-import com.sanderdl.messaging.MessageEvent;
+import com.sanderdl.messaging.Status;
 import com.sanderdl.messaging.UserAppGateway;
 import com.sanderdl.model.JwtUser;
 import com.sanderdl.model.RoleName;
@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService{
         user.getRoles().add(userRole);
 
         User savedUser =  userRepository.save(user);
-        userAppGateway.notifyServices(savedUser, MessageEvent.CREATED);
+        userAppGateway.notifyServices(savedUser, Status.CREATED);
 
         return savedUser;
     }
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String s) {
         User user = userRepository.findByUsername(s);
 
         if (user == null) {
@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService{
         }else {
 
             List<GrantedAuthority> authorities = user.getRoles().stream()
-                    .map(Role -> new SimpleGrantedAuthority(Role.getName().toString()))
+                    .map(role -> new SimpleGrantedAuthority(role.getName().toString()))
                     .collect(Collectors.toList());
 
             return new JwtUser(

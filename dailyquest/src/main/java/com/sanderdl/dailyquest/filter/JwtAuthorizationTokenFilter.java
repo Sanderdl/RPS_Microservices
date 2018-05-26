@@ -1,6 +1,6 @@
-package com.sanderdl.filter;
+package com.sanderdl.dailyquest.filter;
 
-import com.sanderdl.util.JwtTokenUtil;
+import com.sanderdl.dailyquest.util.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
-    private final Logger _logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger _LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private UserDetailsService userDetailsService;
     private JwtTokenUtil jwtTokenUtil;
@@ -33,7 +33,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        _logger.debug("processing authentication for '{}'", request.getRequestURL());
+        _LOGGER.debug("processing authentication for '{}'", request.getRequestURL());
 
         final String requestHeader = request.getHeader(this.tokenHeader);
 
@@ -44,17 +44,17 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                _logger.error("an error occurred during getting username from token", e);
+                _LOGGER.error("an error occurred during getting username from token", e);
             } catch (ExpiredJwtException e) {
-                _logger.warn("the token is expired and not valid anymore", e);
+                _LOGGER.warn("the token is expired and not valid anymore", e);
             }
         } else {
-            _logger.warn("couldn't find bearer string, will ignore the header");
+            _LOGGER.warn("couldn't find bearer string, will ignore the header");
         }
 
-        _logger.debug("checking authentication for user '{}'", username);
+        _LOGGER.debug("checking authentication for user '{}'", username);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            _logger.debug("security context was null, so authorizing user");
+            _LOGGER.debug("security context was null, so authorizing user");
 
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
@@ -62,7 +62,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                _logger.info("authorized user '{}', setting security context", username);
+                _LOGGER.info("authorized user '{}', setting security context", username);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

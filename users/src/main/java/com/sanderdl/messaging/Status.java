@@ -1,6 +1,6 @@
 package com.sanderdl.messaging;
 
-public enum  MessageEvent {
+public enum Status {
     CREATED,
     UPDATED,
     DELETED

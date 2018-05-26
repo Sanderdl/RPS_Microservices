@@ -30,4 +30,5 @@ public class BeansConfig {
     public UserAppGateway userAppGateway(){
         return new UserAppGateway();
     }
+
 }
