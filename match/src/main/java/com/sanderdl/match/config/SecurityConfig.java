@@ -1,10 +1,10 @@
-package com.sanderdl.dailyquest.config;
+package com.sanderdl.match.config;
 
-import com.sanderdl.dailyquest.filter.JwtAuthenticationEntryPoint;
-import com.sanderdl.dailyquest.filter.JwtAuthorizationTokenFilter;
-import com.sanderdl.dailyquest.service.MatchService;
-import com.sanderdl.dailyquest.service.UserService;
-import com.sanderdl.dailyquest.util.JwtTokenUtil;
+
+import com.sanderdl.match.filter.JwtAuthenticationEntryPoint;
+import com.sanderdl.match.filter.JwtAuthorizationTokenFilter;
+import com.sanderdl.match.service.UserService;
+import com.sanderdl.match.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -73,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
 
 
+
         // Custom JWT based security filter
         JwtAuthorizationTokenFilter authenticationTokenFilter = new JwtAuthorizationTokenFilter(userDetailsService(), jwtTokenUtil, tokenHeader);
         httpSecurity
@@ -83,8 +84,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers()
                 .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
                 .cacheControl();
-
-        new MatchService();
     }
 
     @Override
@@ -100,6 +99,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
+                ).and()
+                .ignoring()
+                .antMatchers(
+                        "/match/**"
                 );
 
 

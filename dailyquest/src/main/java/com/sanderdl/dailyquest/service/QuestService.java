@@ -29,7 +29,7 @@ public class QuestService {
     private UserService userService;
 
     @Autowired
-    Evaluator evaluator;
+    private Evaluator evaluator;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -81,10 +81,11 @@ public class QuestService {
         return progressRepository.save(progress);
     }
 
-    private boolean questComplete(QuestProgress progress){
+    boolean questComplete(QuestProgress progress){
         String expression = progress.getQuest().getEvaluation();
 
-        evaluator.putVariable("type", progress.getType());
+        evaluator.setQuoteCharacter('@');
+        evaluator.putVariable("type", String.valueOf(progress.getType()));
         evaluator.putVariable("progress",String.valueOf(progress.getProgress()));
 
         try {
@@ -98,7 +99,7 @@ public class QuestService {
         return false;
     }
 
-    public void deleteQuestProgress(QuestProgress questProgress){
+    void deleteQuestProgress(QuestProgress questProgress){
         questProgress.setUser(null);
         questProgress.setQuest(null);
         progressRepository.delete(questProgress);

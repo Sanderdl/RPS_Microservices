@@ -1,14 +1,14 @@
-package com.sanderdl.dailyquest.service;
+package com.sanderdl.lobby.service;
 
-import com.sanderdl.dailyquest.domain.QuestProgress;
-import com.sanderdl.dailyquest.domain.User;
-import com.sanderdl.dailyquest.exception.ResourceNotFoundException;
-import com.sanderdl.dailyquest.messaging.IGatewayObserver;
-import com.sanderdl.dailyquest.messaging.MessageConsumer;
-import com.sanderdl.dailyquest.messaging.dto.MessageEvent;
-import com.sanderdl.dailyquest.model.JwtUser;
-import com.sanderdl.dailyquest.repository.UserRepository;
-import com.sanderdl.dailyquest.util.MessagingConverter;
+
+import com.sanderdl.lobby.domain.User;
+import com.sanderdl.lobby.exception.ResourceNotFoundException;
+import com.sanderdl.lobby.messaging.IGatewayObserver;
+import com.sanderdl.lobby.messaging.MessageConsumer;
+import com.sanderdl.lobby.messaging.dto.MessageEvent;
+import com.sanderdl.lobby.model.JwtUser;
+import com.sanderdl.lobby.repository.UserRepository;
+import com.sanderdl.lobby.util.MessagingConverter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,44 +16,26 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class UserService implements IGatewayObserver, UserDetailsService{
+
+    private final MessageConsumer consumer = new MessageConsumer("users","1",this);
 
     @Autowired
     private UserRepository userRepository ;
 
-    @Autowired
-    private QuestService questService;
-
-    private MessageConsumer messageConsumer = new MessageConsumer(this);
-
     private void createUser(User user){
-        User u = userRepository.save(user);
 
-        Set<QuestProgress> quests = new HashSet<>();
-        quests.add(questService.getNewQuestForUser(u));
-        quests.add(questService.getNewQuestForUser(u));
-        quests.add(questService.getNewQuestForUser(u));
-        user.setCurrentQuests(quests);
-
-        user.setLastNewQuestGotten(new Timestamp(System.currentTimeMillis()));
-
-        userRepository.save(u);
+        userRepository.save(user);
     }
 
-    User getUserById (Long id) {
+    public User getUserById (Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
-    void updateUser(User user){
-        userRepository.save(user);
-    }
 
     @Override
     public void update(Object... param) {

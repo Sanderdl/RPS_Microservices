@@ -17,7 +17,7 @@ public class QuestProgress {
     @JoinColumn(name = "quest_id")
     private Quest quest;
 
-    private String type;
+    private int type;
     private int progress;
 
 
@@ -53,11 +53,11 @@ public class QuestProgress {
         this.id = id;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 }
