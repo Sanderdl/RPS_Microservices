@@ -1,7 +1,9 @@
 package com.sanderdl.controller;
 
+import com.sanderdl.domain.User;
 import com.sanderdl.exception.AuthenticationException;
 import com.sanderdl.model.LoginRequest;
+import com.sanderdl.model.TokenReply;
 import com.sanderdl.service.UserService;
 import com.sanderdl.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,13 @@ public class AuthController {
         final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(("Bearer " + token));
+        User u = userService.getByUsername(authenticationRequest.getUsername());
+
+        TokenReply reply = new TokenReply();
+        reply.setUser(u);
+        reply.setToken(("Bearer " + token));
+
+        return ResponseEntity.ok(reply);
     }
 
 
