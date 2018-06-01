@@ -4,7 +4,6 @@ public class MatchRequest {
     private String roomName;
     private Long userId;
     private int type;
-    private int round;
 
     public String getRoomName() {
         return roomName;
@@ -30,11 +29,4 @@ public class MatchRequest {
         this.type = type;
     }
 
-    public int getRound() {
-        return round;
-    }
-
-    public void setRound(int round) {
-        this.round = round;
-    }
 }

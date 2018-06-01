@@ -41,7 +41,6 @@ public class MatchService {
         if (match == null) {
             match = new Match();
             match.setPlayer1(request.getUserId());
-            match.setCurrentRound(request.getRound());
             match.setCanSee(canSee.SELF);
 
         } else if (match.getPlayer2() == null) {

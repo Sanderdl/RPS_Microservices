@@ -35,17 +35,14 @@ public class SocketHandler extends TextWebSocketHandler implements IGatewayObser
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message)
-            throws IOException {
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
 
         RoomEvent event = MessagingConverter.stringToClass(message.getPayload(), RoomEvent.class);
         users.putIfAbsent(event.getUserId(), session);
 
         String reply = roomService.handleRequest(event);
 
-        for (WebSocketSession webSocketSession : sessions) {
-            webSocketSession.sendMessage(new TextMessage(reply));
-        }
+        sendAll(reply);
     }
 
     @Override
@@ -66,13 +63,29 @@ public class SocketHandler extends TextWebSocketHandler implements IGatewayObser
         if (event.getStatus() == Status.CREATED) {
             WebSocketSession session = users.get(event.getId());
 
+
             try {
                 if (session != null)
                     session.sendMessage(new TextMessage(record.value()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else if (event.getStatus() == Status.UPDATED) {
+            users.remove(event.getId());
+            String room = roomService.removePlayerFromRoom(event.getId(), event.getName());
+
+            sendAll(room);
         }
 
+    }
+
+    private void sendAll(String reply) {
+        for (WebSocketSession webSocketSession : sessions) {
+            try {
+                webSocketSession.sendMessage(new TextMessage(reply));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

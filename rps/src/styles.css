@@ -35,6 +35,8 @@ html, body{
 	width: 100%;
 	float: left;
 	padding: 12px;
+    margin: 8px;
+    box-sizing: border-box;
 }
 
 @media screen and (min-width: 48rem) {
@@ -48,7 +50,7 @@ html, body{
 	}
 
 	.block{
-		width: 50%;
+		width: 44%;
 	}
 }
 
@@ -59,7 +61,7 @@ html, body{
 	}
 
 	.block{
-		width: 33.33%;
+		width: 44%;
 	}
 
 	.margin-lg{

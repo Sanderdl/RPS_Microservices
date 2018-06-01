@@ -16,7 +16,6 @@ export class AuthService {
         return this.http.post<TokenLogin>(Urls.authUrl, body).map(
             res => {
                 this.setSession(res);
-                console.log('we get here!');
                 return res;
             }
         );

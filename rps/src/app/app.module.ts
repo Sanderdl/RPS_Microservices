@@ -8,13 +8,17 @@ import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {AppRoutingModule} from './app-routing.module';
-import { RouterModule } from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {UserService} from './user.service';
 import {AuthService} from './auth.service';
-import {HttpClientModule} from '@angular/common/http';
-import {MatButtonModule} from '@angular/material';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {MatButtonModule, MatExpansionModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
-import { LobbyComponent } from './lobby/lobby.component';
+import {LobbyComponent} from './lobby/lobby.component';
+import {AuthInterceptor} from './auth-intercepter';
+import {LobbyService} from './lobby.service';
+import {SocketService} from './socket.service';
+import { MatchComponent } from './match/match.component';
 
 
 @NgModule({
@@ -22,7 +26,8 @@ import { LobbyComponent } from './lobby/lobby.component';
         AppComponent,
         LoginComponent,
         RegisterComponent,
-        LobbyComponent
+        LobbyComponent,
+        MatchComponent
     ],
     imports: [
         BrowserModule,
@@ -32,9 +37,20 @@ import { LobbyComponent } from './lobby/lobby.component';
         AppRoutingModule,
         HttpClientModule,
         RouterModule,
-        MatButtonModule
+        MatButtonModule,
+        MatExpansionModule
     ],
-    providers: [UserService, AuthService],
+    providers: [
+        UserService,
+        AuthService,
+        LobbyService,
+        SocketService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

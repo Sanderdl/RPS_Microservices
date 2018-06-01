@@ -1,6 +1,7 @@
 package com.sanderdl.lobby.config;
 
 
+import com.sanderdl.lobby.filter.CorsFilter;
 import com.sanderdl.lobby.filter.JwtAuthenticationEntryPoint;
 import com.sanderdl.lobby.filter.JwtAuthorizationTokenFilter;
 import com.sanderdl.lobby.service.UserService;
@@ -21,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -48,6 +50,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoderBean() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsFilter corsFilter(){
+        return new CorsFilter();
     }
 
     @Bean
@@ -103,7 +110,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers(
                         "/lobby/**"
-                );
+                ).and()
+                .ignoring().requestMatchers(CorsUtils::isPreFlightRequest);
+
 
 
     }
