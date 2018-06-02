@@ -5,4 +5,5 @@ export class Urls {
     public static roomsUrl = 'http://localhost:8082/rooms';
     public static lobbyUrl = 'ws://localhost:8082/lobby';
 
+    public static matchUrl = 'ws://localhost:8083/match';
 }

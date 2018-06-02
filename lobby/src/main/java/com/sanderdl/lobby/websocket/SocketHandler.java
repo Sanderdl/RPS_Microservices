@@ -8,7 +8,6 @@ import com.sanderdl.lobby.model.RoomEvent;
 import com.sanderdl.lobby.service.RoomService;
 import com.sanderdl.lobby.util.MessagingConverter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,13 +19,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@Component
+
 public class SocketHandler extends TextWebSocketHandler implements IGatewayObserver {
 
     private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     private Map<Long, WebSocketSession> users = new ConcurrentHashMap<>();
 
-    private final MessageConsumer consumer = new MessageConsumer("match", "2", this);
+    private final MessageConsumer consumer = new MessageConsumer("match", "lobby", "2", this);
 
     private final RoomService roomService;
 
@@ -38,7 +37,7 @@ public class SocketHandler extends TextWebSocketHandler implements IGatewayObser
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
 
         RoomEvent event = MessagingConverter.stringToClass(message.getPayload(), RoomEvent.class);
-        users.putIfAbsent(event.getUserId(), session);
+        users.put(event.getUserId(), session);
 
         String reply = roomService.handleRequest(event);
 

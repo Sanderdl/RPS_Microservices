@@ -13,7 +13,7 @@ export class SocketService {
             this.ws.onerror = event => observer.error(event);
             this.ws.onclose = event => observer.complete();
             this.ws.onopen = event => {
-                openSubscriber.next();
+                openSubscriber.next(event);
                 openSubscriber.complete();
             };
 

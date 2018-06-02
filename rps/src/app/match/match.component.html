@@ -1,3 +1,27 @@
-<p>
-  match works!
-</p>
+<div *ngIf="match" class="wrapper" style="padding-top: 150px;">
+    <h2 class="mat-title">Round {{match.currentRound}}</h2>
+    <div class="block bg-clear mat-elevation-z10">
+        <h2 class="mat-title">You</h2>
+        <p>Wins: {{yourWins}}</p>
+        <button mat-fab color="accent" (click)="doMove(1)">
+            <i class="fa fa-hand-rock-o" aria-hidden="true"></i>
+        </button>
+        <button mat-fab color="accent" (click)="doMove(3)">
+            <i class="fa fa-hand-paper-o" aria-hidden="true"></i>
+        </button>
+        <button mat-fab color="accent" (click)="doMove(2)">
+            <i class="fa fa-hand-scissors-o" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="block bg-clear mat-elevation-z10">
+        <h2 class="mat-title">Other player</h2>
+        <p>Wins: {{otherWins}}</p>
+        <h2 class="mat-title">{{status}}</h2>
+    </div>
+</div>
+<div class="wrapper" *ngIf="!match" style="padding-top: 150px">
+    <div class="margin-lg">
+        <img src="assets/images/logo.png" style="width: 100%; height: 100%">
+        <button class="full-width" (click)="ready()" mat-raised-button color="primary">Ready</button>
+    </div>
+</div>

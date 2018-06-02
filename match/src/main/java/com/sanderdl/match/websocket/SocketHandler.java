@@ -40,8 +40,10 @@ public class SocketHandler extends TextWebSocketHandler {
             WebSocketSession session1 = sessions.get(match.getPlayer1());
             WebSocketSession session2 = sessions.get(match.getPlayer2());
 
-            session1.sendMessage(new TextMessage(matchJson));
-            session2.sendMessage(new TextMessage(matchJson));
+            if (session1.isOpen())
+                session1.sendMessage(new TextMessage(matchJson));
+            if (session2.isOpen())
+                session2.sendMessage(new TextMessage(matchJson));
         }else if (match.getCanSee() == canSee.SELF)
             session.sendMessage(new TextMessage(matchJson));
 

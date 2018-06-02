@@ -19,11 +19,11 @@ public class RoomService {
 
     public RoomService() {
 
-        rooms.put("Room 1", new Room("Room 1"));
-        rooms.put("Room 2", new Room("Room 2"));
-        rooms.put("Room 3", new Room("Room 3"));
-        rooms.put("Room 4", new Room("Room 4"));
-        rooms.put("Room 5", new Room("Room 5"));
+        rooms.put("Room1", new Room("Room1"));
+        rooms.put("Room2", new Room("Room2"));
+        rooms.put("Room3", new Room("Room3"));
+        rooms.put("Room4", new Room("Room4"));
+        rooms.put("Room5", new Room("Room5"));
     }
 
     public String handleRequest(RoomEvent event) {

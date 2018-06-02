@@ -19,14 +19,14 @@ public class MessageConsumer extends Thread {
 
     private static final Logger logger = Logger.getLogger(MessageConsumer.class.getName());
 
-    public MessageConsumer(String topic, String groupId, IGatewayObserver observer){
+    public MessageConsumer(String topic, String groupId, String clientId, IGatewayObserver observer){
 
         Properties configProperties = new Properties();
         configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         configProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         configProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        configProperties.put(ConsumerConfig.CLIENT_ID_CONFIG, groupId);
+        configProperties.put(ConsumerConfig.CLIENT_ID_CONFIG, clientId);
 
         consumer = new KafkaConsumer<>(configProperties);
 

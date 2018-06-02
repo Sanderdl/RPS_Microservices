@@ -21,7 +21,7 @@ import java.util.List;
 
 public class UserService implements IGatewayObserver, UserDetailsService{
 
-    private final MessageConsumer consumer = new MessageConsumer("users","1",this);
+    private final MessageConsumer consumer = new MessageConsumer("users","lobby","1",this);
 
     @Autowired
     private UserRepository userRepository ;
