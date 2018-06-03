@@ -7,10 +7,7 @@ import com.sanderdl.lobby.model.Room;
 import com.sanderdl.lobby.model.RoomEvent;
 import com.sanderdl.lobby.util.MessagingConverter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RoomService {
     private static final Map<String, Room> rooms = new HashMap<>();
@@ -80,7 +77,9 @@ public class RoomService {
     }
 
     public List<Room> getRooms() {
-        return new ArrayList<>(rooms.values());
+        List<Room> result = new ArrayList<>(rooms.values());
+        Collections.sort(result);
+        return result;
     }
 
     private void sendToMatch(Long userId, String roomName){
@@ -93,11 +92,15 @@ public class RoomService {
     public String removePlayerFromRoom(Long userId, String roomName){
         Room room = rooms.get(roomName);
 
-        if (userId.equals(room.getPlayer1()))
+        if (userId.equals(room.getPlayer1())) {
             room.setPlayer1(null);
+            room.setSlots(room.getSlots() - 1);
+        }
 
-        if (userId.equals(room.getPlayer2()))
+        if (userId.equals(room.getPlayer2())) {
             room.setPlayer2(null);
+            room.setSlots(room.getSlots() - 1);
+        }
 
         rooms.put(roomName, room);
 

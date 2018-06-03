@@ -1,9 +1,6 @@
 package com.sanderdl.dailyquest.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +15,7 @@ public class User {
 
     private Timestamp lastNewQuestGotten;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<QuestProgress> currentQuests = new HashSet<>();
 
     public Long getUserId() {

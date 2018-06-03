@@ -1,8 +1,8 @@
 package com.sanderdl.dailyquest.config;
 
+import com.sanderdl.dailyquest.filter.CorsFilter;
 import com.sanderdl.dailyquest.filter.JwtAuthenticationEntryPoint;
 import com.sanderdl.dailyquest.filter.JwtAuthorizationTokenFilter;
-import com.sanderdl.dailyquest.service.MatchService;
 import com.sanderdl.dailyquest.service.UserService;
 import com.sanderdl.dailyquest.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -48,6 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoderBean() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsFilter corsFilter(){
+        return new CorsFilter();
     }
 
     @Bean
@@ -84,7 +90,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
                 .cacheControl();
 
-        new MatchService();
     }
 
     @Override
@@ -100,7 +105,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
-                );
+                ).and()
+                .ignoring().requestMatchers(CorsUtils::isPreFlightRequest);
 
 
     }

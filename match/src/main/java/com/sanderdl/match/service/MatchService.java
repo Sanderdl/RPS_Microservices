@@ -18,6 +18,8 @@ public class MatchService {
 
     private final MessageProducer producer = new MessageProducer();
 
+    private static final String MATCH_TOPIC = "match";
+
     public Match handleRequest(MatchRequest request) {
         Match match = matches.get(request.getRoomName());
 
@@ -30,7 +32,7 @@ public class MatchService {
 
         matches.put(request.getRoomName(), match);
 
-        if(match.getCurrentRound() > 3){
+        if (match.getCurrentRound() > 3) {
             endMatch(match, request);
         }
 
@@ -88,10 +90,9 @@ public class MatchService {
 
         match.setCanSee(canSee.SELF);
 
-        if (roundEnded(match)){
+        if (roundEnded(match)) {
             handleRound(match, request);
         }
-
 
 
         return match;
@@ -108,13 +109,43 @@ public class MatchService {
 
     }
 
-    private void endMatch(Match match, MatchRequest request){
-        Long winner = match.getWinsPlayer1() >= match.getWinsPlayer2() ? match.getPlayer1() : match.getPlayer2();
+    private void endMatch(Match match, MatchRequest request) {
+        Long winner = getWinner(match);
+        int finalAwnswer = getFinalAnswer(match, winner);
 
-        MessageEvent event = new MessageEvent(winner, String.valueOf(request.getType()), Status.UPDATED);
+                MessageEvent event = new MessageEvent(winner, String.valueOf(finalAwnswer), Status.UPDATED);
         String message = MessagingConverter.classToString(event);
-        producer.sendMessage(message, "match");
+        producer.sendMessage(message, MATCH_TOPIC);
+
+        MessageEvent player1 = new MessageEvent(match.getPlayer1(), request.getRoomName(), Status.DELETED);
+        MessageEvent player2 = new MessageEvent(match.getPlayer2(), request.getRoomName(), Status.DELETED);
+
+        String deleted1 = MessagingConverter.classToString(player1);
+        String deleted2 = MessagingConverter.classToString(player2);
+
+        producer.sendMessage(deleted1, MATCH_TOPIC);
+        producer.sendMessage(deleted2, MATCH_TOPIC);
 
         matches.put(request.getRoomName(), null);
+    }
+
+    private Long getWinner(Match match) {
+        if (match.getWinsPlayer1() > match.getWinsPlayer2())
+            return match.getPlayer1();
+
+        else if (match.getWinsPlayer2() > match.getWinsPlayer1())
+            return match.getPlayer2();
+
+        return 0L;
+    }
+
+    private int getFinalAnswer(Match match, Long winner) {
+        if (winner.equals(match.getPlayer1()))
+            return match.getAnswersPlayer1().get(3).getType();
+
+        if (winner.equals(match.getPlayer2()))
+            return match.getAnswersPlayer2().get(3).getType();
+
+        return 0;
     }
 }

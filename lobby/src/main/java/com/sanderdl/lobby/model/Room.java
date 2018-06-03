@@ -1,6 +1,6 @@
 package com.sanderdl.lobby.model;
 
-public class Room {
+public class Room implements Comparable<Room>{
 
     private String name;
     private int slots;
@@ -41,5 +41,10 @@ public class Room {
 
     public void setSlots(int slots) {
         this.slots = slots;
+    }
+
+    @Override
+    public int compareTo(Room room) {
+        return this.name.compareTo(room.getName());
     }
 }

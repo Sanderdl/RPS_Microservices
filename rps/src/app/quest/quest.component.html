@@ -1,0 +1,9 @@
+<div id="quest-block" class="bg-clear mat-elevation-z10">
+    <h2 class="mat-title">Quests</h2>
+    <hr>
+    <div *ngFor="let quest of quests">
+        <h2 class="mat-title">{{quest.name}}</h2>
+        <p>{{quest.description}}</p>
+        <hr>
+    </div>
+</div>

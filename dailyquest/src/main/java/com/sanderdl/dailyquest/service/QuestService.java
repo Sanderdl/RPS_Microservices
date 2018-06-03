@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class QuestService {
 
@@ -32,8 +32,6 @@ public class QuestService {
     private Evaluator evaluator;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private final Random random = new Random();
 
     private static final long MILLIS_PER_DAY = 24 * 60 * 60 * 1000L;
 
@@ -66,7 +64,7 @@ public class QuestService {
     }
 
     QuestProgress getNewQuestForUser(User user) {
-        int i = random.nextInt(3)+ 1;
+        int i = ThreadLocalRandom.current().nextInt(1, 3 + 1);
 
         Quest quest = null;
 
@@ -84,7 +82,6 @@ public class QuestService {
     boolean questComplete(QuestProgress progress){
         String expression = progress.getQuest().getEvaluation();
 
-        evaluator.setQuoteCharacter('@');
         evaluator.putVariable("type", String.valueOf(progress.getType()));
         evaluator.putVariable("progress",String.valueOf(progress.getProgress()));
 
@@ -103,6 +100,10 @@ public class QuestService {
         questProgress.setUser(null);
         questProgress.setQuest(null);
         progressRepository.delete(questProgress);
+    }
+
+    void saveQuestProgress(QuestProgress questProgress){
+        progressRepository.save(questProgress);
     }
 
 

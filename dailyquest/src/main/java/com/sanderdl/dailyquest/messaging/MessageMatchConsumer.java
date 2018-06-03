@@ -17,7 +17,7 @@ public class MessageMatchConsumer extends Thread {
     private final List<String> topics;
     private IGatewayObserver observer;
 
-    private static final Logger logger = Logger.getLogger(MessageConsumer.class.getName());
+    private static final Logger logger = Logger.getLogger(MessageMatchConsumer.class.getName());
 
     public MessageMatchConsumer(String topic, String groupId, IGatewayObserver observer){
 

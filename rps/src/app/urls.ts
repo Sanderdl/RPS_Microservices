@@ -6,4 +6,6 @@ export class Urls {
     public static lobbyUrl = 'ws://localhost:8082/lobby';
 
     public static matchUrl = 'ws://localhost:8083/match';
+
+    public static questUrl = 'http://localhost:8081/quests/user/';
 }

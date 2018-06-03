@@ -1,6 +1,8 @@
 package com.sanderdl.dailyquest.config;
 
 
+import com.sanderdl.dailyquest.service.MatchService;
+import com.sanderdl.dailyquest.service.MatchUserService;
 import com.sanderdl.dailyquest.service.QuestService;
 import com.sanderdl.dailyquest.service.UserService;
 import com.sanderdl.dailyquest.util.JwtTokenUtil;
@@ -35,5 +37,13 @@ public class BeansConfig {
     @Bean
     public Evaluator evaluator() { return new Evaluator();}
 
+    @Bean
+    public MatchUserService matchUserService(){
+        return new MatchUserService();
+    }
 
+    @Bean
+    public MatchService matchService(){
+        return new MatchService();
+    }
 }

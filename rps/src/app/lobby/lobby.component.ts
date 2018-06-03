@@ -41,7 +41,6 @@ export class LobbyComponent implements OnInit {
                 data => {
                     console.log(data)
                     if (data.status && data.status === 'CREATED') {
-                        console.log('wtf');
                         this.sendToMatch(data.name);
                     } else {
                         this.updateRoom(data);
@@ -76,7 +75,6 @@ export class LobbyComponent implements OnInit {
     }
 
     private sendToMatch(roomName: string) {
-        console.log('dit werk dus wtf is dit voor kutzooi');
         this.router.navigate(['match', roomName]);
     }
 

@@ -4,7 +4,7 @@ import com.sanderdl.dailyquest.domain.QuestProgress;
 import com.sanderdl.dailyquest.domain.User;
 import com.sanderdl.dailyquest.exception.ResourceNotFoundException;
 import com.sanderdl.dailyquest.messaging.IGatewayObserver;
-import com.sanderdl.dailyquest.messaging.MessageConsumer;
+import com.sanderdl.dailyquest.messaging.MessageMatchConsumer;
 import com.sanderdl.dailyquest.messaging.dto.MessageEvent;
 import com.sanderdl.dailyquest.model.JwtUser;
 import com.sanderdl.dailyquest.repository.UserRepository;
@@ -30,7 +30,7 @@ public class UserService implements IGatewayObserver, UserDetailsService{
     @Autowired
     private QuestService questService;
 
-    private MessageConsumer messageConsumer = new MessageConsumer(this);
+    private MessageMatchConsumer consumer = new MessageMatchConsumer("users","dailyusers",this);
 
     private void createUser(User user){
         User u = userRepository.save(user);
@@ -41,7 +41,7 @@ public class UserService implements IGatewayObserver, UserDetailsService{
         quests.add(questService.getNewQuestForUser(u));
         user.setCurrentQuests(quests);
 
-        user.setLastNewQuestGotten(new Timestamp(System.currentTimeMillis()));
+        u.setLastNewQuestGotten(new Timestamp(System.currentTimeMillis()));
 
         userRepository.save(u);
     }

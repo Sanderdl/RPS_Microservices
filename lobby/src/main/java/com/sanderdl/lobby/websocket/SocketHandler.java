@@ -69,7 +69,7 @@ public class SocketHandler extends TextWebSocketHandler implements IGatewayObser
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (event.getStatus() == Status.UPDATED) {
+        } else if (event.getStatus() == Status.DELETED) {
             users.remove(event.getId());
             String room = roomService.removePlayerFromRoom(event.getId(), event.getName());
 

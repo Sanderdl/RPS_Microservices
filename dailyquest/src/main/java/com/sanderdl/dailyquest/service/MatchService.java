@@ -18,7 +18,7 @@ public class MatchService implements IGatewayObserver {
     private QuestService questService;
 
     @Autowired
-    private UserService userService;
+    private MatchUserService matchUserService;
 
     private MessageMatchConsumer messageConsumer = new MessageMatchConsumer("match", "2", this);
 
@@ -27,22 +27,22 @@ public class MatchService implements IGatewayObserver {
         ConsumerRecord<String, String> record = (ConsumerRecord<String, String>) param[0];
         MessageEvent event = MessagingConverter.stringToClass(record.value(), MessageEvent.class);
 
-        if (event.getStatus() == Status.UPDATED){
-           User u = userService.getUserById(event.getId());
+        if (event.getStatus() == Status.UPDATED && event.getId() != 0) {
+            User u = matchUserService.getUserById(event.getId());
 
-           for (QuestProgress qp: u.getCurrentQuests()){
-               qp.setType(Integer.valueOf(event.getName()));
-               qp.setProgress(1);
-           }
-
-            checkIfQuestsComplete(event.getId());
+            if (u != null) {
+                for (QuestProgress qp : u.getCurrentQuests()) {
+                    qp.setType(Integer.valueOf(event.getName()));
+                    qp.setProgress(1);
+                    questService.saveQuestProgress(qp);
+                }
+                u = matchUserService.save(u);
+                checkIfQuestsComplete(u.getCurrentQuests());
+            }
         }
     }
 
-    private void checkIfQuestsComplete(Long userId) {
-        User user = userService.getUserById(userId);
-
-        Set<QuestProgress> quests = user.getCurrentQuests();
+    private void checkIfQuestsComplete(Set<QuestProgress> quests) {
 
         for (QuestProgress qp : quests) {
             boolean complete = questService.questComplete(qp);

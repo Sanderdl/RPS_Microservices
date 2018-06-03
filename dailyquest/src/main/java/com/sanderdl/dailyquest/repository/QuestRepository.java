@@ -13,5 +13,5 @@ public interface QuestRepository extends JpaRepository<Quest, Long> {
     @Query(value = "SELECT * FROM quests q " +
             "INNER JOIN quest_progress qp ON q.id = qp.quest_id " +
             "WHERE qp.user_id = :id", nativeQuery = true)
-    public Set<Quest> getQuestsForUser(@Param("id") Long id);
+    Set<Quest> getQuestsForUser(@Param("id") Long id);
 }

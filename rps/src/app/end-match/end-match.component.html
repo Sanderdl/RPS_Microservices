@@ -1,0 +1,7 @@
+<div>
+    <h2 *ngIf="data.won === 'won'" class="mat-display-1">You are the winner!</h2>
+    <h2 *ngIf="data.won === 'lost'" class="mat-display-1">You have lost. Oh no!</h2>
+    <h2 *ngIf="data.won === 'tie'" class="mat-display-1">It's a tie.</h2>
+
+    <button class="full-width" (click)="close()" mat-raised-button color="primary">Leave match</button>
+</div>

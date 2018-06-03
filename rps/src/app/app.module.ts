@@ -12,7 +12,7 @@ import {RouterModule} from '@angular/router';
 import {UserService} from './user.service';
 import {AuthService} from './auth.service';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {MatButtonModule, MatExpansionModule, MatSnackBarModule} from '@angular/material';
+import {MatButtonModule, MatDialogModule, MatExpansionModule, MatSnackBarModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {LobbyComponent} from './lobby/lobby.component';
 import {AuthInterceptor} from './auth-intercepter';
@@ -20,6 +20,9 @@ import {LobbyService} from './lobby.service';
 import {SocketService} from './socket.service';
 import { MatchComponent } from './match/match.component';
 import {MatchService} from './match.service';
+import { EndMatchComponent } from './end-match/end-match.component';
+import { QuestComponent } from './quest/quest.component';
+import {QuestService} from './quest.service';
 
 
 @NgModule({
@@ -28,7 +31,9 @@ import {MatchService} from './match.service';
         LoginComponent,
         RegisterComponent,
         LobbyComponent,
-        MatchComponent
+        MatchComponent,
+        EndMatchComponent,
+        QuestComponent
     ],
     imports: [
         BrowserModule,
@@ -40,7 +45,8 @@ import {MatchService} from './match.service';
         RouterModule,
         MatButtonModule,
         MatExpansionModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatDialogModule
     ],
     providers: [
         UserService,
@@ -48,13 +54,17 @@ import {MatchService} from './match.service';
         LobbyService,
         SocketService,
         MatchService,
+        QuestService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
             multi: true
         }
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [
+        EndMatchComponent
+    ]
 })
 export class AppModule {
 }

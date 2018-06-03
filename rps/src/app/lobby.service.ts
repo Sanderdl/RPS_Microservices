@@ -5,6 +5,7 @@ import {Urls} from './urls';
 import {Subscriber} from 'rxjs/Subscriber';
 import {SocketService} from './socket.service';
 import {RoomEvent} from './models/room-event';
+import {Room} from './models/room';
 
 @Injectable()
 export class LobbyService {
@@ -13,8 +14,8 @@ export class LobbyService {
                 private socketService: SocketService) {
     }
 
-    getCurrentRooms(): Observable<any> {
-        return this.http.get(Urls.roomsUrl);
+    getCurrentRooms(): Observable<Room[]> {
+        return this.http.get<Room[]>(Urls.roomsUrl);
     }
 
     connectUser(): Observable<any> {

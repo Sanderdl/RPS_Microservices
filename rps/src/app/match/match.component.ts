@@ -3,7 +3,8 @@ import {Match} from '../models/match';
 import {MatchService} from '../match.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../auth.service';
-import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
+import {EndMatchComponent} from '../end-match/end-match.component';
 
 @Component({
     selector: 'app-match',
@@ -28,7 +29,8 @@ export class MatchComponent implements OnInit {
                 private auth: AuthService,
                 private route: ActivatedRoute,
                 private router: Router,
-                public snackbar: MatSnackBar) {
+                public snackbar: MatSnackBar,
+                public dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -51,6 +53,10 @@ export class MatchComponent implements OnInit {
                     this.determinePlayers();
                     this.updateWins();
                     this.handleRound();
+
+                    if (this.match.currentRound > 3) {
+                        this.openDialog();
+                    }
                 }
             );
 
@@ -154,6 +160,40 @@ export class MatchComponent implements OnInit {
                 return 'Other player won this round';
             }
         }
+    }
+
+    determineFinalWinner(): string {
+
+        if (this.match.winsPlayer1 > this.match.winsPlayer2) {
+            if (this.player === 1) {
+                return 'won';
+            }
+        }
+
+        if (this.match.winsPlayer2 > this.match.winsPlayer1) {
+            if (this.player === 2) {
+                return 'won';
+            }
+        }
+
+        if (this.match.winsPlayer2 === this.match.winsPlayer1) {
+            return 'tie';
+        }
+
+        return 'lost';
+    }
+
+    openDialog(): void {
+        const dialogRef = this.dialog.open(EndMatchComponent, {
+            width: '500px',
+            data: {won: this.determineFinalWinner()}
+        });
+
+        console.log('open!');
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.router.navigate(['lobby']);
+        });
     }
 
 
