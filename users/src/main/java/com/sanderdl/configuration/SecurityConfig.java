@@ -1,6 +1,7 @@
 package com.sanderdl.configuration;
 
 import com.sanderdl.filter.JwtAuthorizationTokenFilter;
+import com.sanderdl.security.CorsFilter;
 import com.sanderdl.security.JwtAuthenticationEntryPoint;
 import com.sanderdl.service.UserService;
 import com.sanderdl.util.JwtTokenUtil;
@@ -43,6 +44,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${jwt.route.register.path}")
     private String registerPath;
 
+    @Bean
+    public CorsFilter corsFilter(){
+        return new CorsFilter();
+    }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -74,8 +80,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("**").permitAll()
+                .anyRequest().authenticated()
+
+                .antMatchers("/users/**").permitAll()
                 .anyRequest().authenticated();
+
 
         // Custom JWT based security filter
         JwtAuthorizationTokenFilter authenticationTokenFilter = new JwtAuthorizationTokenFilter(userDetailsService(), jwtTokenUtil, tokenHeader);
@@ -121,5 +131,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     }
+
+
+
 
 }

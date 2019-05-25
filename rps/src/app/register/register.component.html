@@ -1,0 +1,16 @@
+<div class="wrapper">
+	<img src="assets/images/logo.png" style="width: 100%; height: 100%">
+	<div id="login-card" class="margin-lg bg-clear mat-elevation-z9">
+		<h2 class="mat-display-1">Register</h2>
+		<mat-form-field class="full-width">
+			<input [(ngModel)]="username" matInput placeholder="Username">
+		</mat-form-field>
+		<mat-form-field class="full-width">
+			<input [(ngModel)]="password" type="password" matInput placeholder="Password">
+		</mat-form-field>
+
+        <button class="full-width" (click)="onSubmit()" mat-raised-button color="primary">Register</button>
+
+	</div>
+    <p class="mat-body-2 bg-clear margin-lg">You need an account to play. You can login <a [routerLink]="['/login']" style="cursor: pointer" class="mat-tab-link">here</a></p>
+</div>

@@ -1,0 +1,8 @@
+#quest-block{
+    position: fixed;
+    width: 500px;
+    bottom: 20px;
+    z-index: 10;
+    right: 0;
+    padding: 12px;
+}

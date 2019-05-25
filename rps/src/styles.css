@@ -1,0 +1,74 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+html, body{
+	background: url(assets/images/background.png) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.bg-clear{
+	background-color: white;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.wrapper {
+	width: 95%;
+	margin: 0 auto;
+}
+
+.margin-lg{
+	margin-left: 8px;
+	margin-right: 8px;
+	box-sizing: border-box;
+}
+
+.block{
+	width: 100%;
+	float: left;
+	padding: 12px;
+    margin: 8px;
+    box-sizing: border-box;
+}
+
+@media screen and (min-width: 48rem) {
+	.wrapper {
+		width: 80%;
+	}
+
+	.margin-lg{
+		margin-left: 128px;
+		margin-right: 128px;
+	}
+
+	.block{
+		width: 44%;
+	}
+}
+
+@media screen and (min-width: 64rem) {
+
+	.wrapper {
+		width: 60%;
+	}
+
+	.block{
+		width: 44%;
+	}
+
+	.margin-lg{
+		margin-left: 192px;
+		margin-right: 192px;
+	}
+
+}
+
+

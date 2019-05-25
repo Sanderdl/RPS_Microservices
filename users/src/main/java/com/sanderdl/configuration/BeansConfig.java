@@ -1,6 +1,7 @@
 package com.sanderdl.configuration;
 
 
+import com.sanderdl.messaging.UserAppGateway;
 import com.sanderdl.service.UserService;
 import com.sanderdl.util.JwtTokenUtil;
 import org.springframework.context.annotation.Bean;
@@ -25,5 +26,9 @@ public class BeansConfig {
         return new JwtTokenUtil();
     }
 
+    @Bean
+    public UserAppGateway userAppGateway(){
+        return new UserAppGateway();
+    }
 
 }

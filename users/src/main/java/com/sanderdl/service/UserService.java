@@ -4,6 +4,8 @@ package com.sanderdl.service;
 import com.sanderdl.domain.Role;
 import com.sanderdl.domain.User;
 import com.sanderdl.exception.ResourceNotFoundException;
+import com.sanderdl.messaging.Status;
+import com.sanderdl.messaging.UserAppGateway;
 import com.sanderdl.model.JwtUser;
 import com.sanderdl.model.RoleName;
 import com.sanderdl.repository.RoleRepository;
@@ -26,6 +28,9 @@ public class UserService implements UserDetailsService{
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private UserAppGateway userAppGateway;
+
     private BCryptPasswordEncoder passwordEncoder;
 
     public UserService(BCryptPasswordEncoder passwordEncoder) {
@@ -34,9 +39,14 @@ public class UserService implements UserDetailsService{
 
     public User register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER);
         user.getRoles().add(userRole);
-        return userRepository.save(user);
+
+        User savedUser =  userRepository.save(user);
+        userAppGateway.notifyServices(savedUser, Status.CREATED);
+
+        return savedUser;
     }
 
     public List<User> getAllUsers() {
@@ -48,8 +58,12 @@ public class UserService implements UserDetailsService{
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
+    public User getByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
+
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String s) {
         User user = userRepository.findByUsername(s);
 
         if (user == null) {
@@ -57,7 +71,7 @@ public class UserService implements UserDetailsService{
         }else {
 
             List<GrantedAuthority> authorities = user.getRoles().stream()
-                    .map(Role -> new SimpleGrantedAuthority(Role.getName().toString()))
+                    .map(role -> new SimpleGrantedAuthority(role.getName().toString()))
                     .collect(Collectors.toList());
 
             return new JwtUser(

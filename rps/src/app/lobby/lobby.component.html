@@ -1,0 +1,33 @@
+<div class="wrapper" style="padding-top: 150px;">
+    <div class="block bg-clear mat-elevation-z10">
+        <h2 class="mat-display-1">Rooms</h2>
+        <mat-expansion-panel *ngFor="let room of rooms">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{room.name}}
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{room.slots}}/2
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <button (click)="enterOrLeaveRoom(room,'ENTER')" mat-raised-button color="primary">Enter room</button>
+        </mat-expansion-panel>
+    </div>
+    <div class="block bg-clear mat-elevation-z10">
+        <h2 class="mat-display-1">Current room</h2>
+        <div *ngIf="currentRoom">
+            <h3 class="mat-title">{{currentRoom.name}}</h3>
+            <p *ngIf="currentRoom.slots < 2">
+                Waiting for other player...
+            </p>
+            <button (click)="enterOrLeaveRoom(currentRoom,'LEAVE')" mat-raised-button color="primary">Leave room</button>
+        </div>
+        <div *ngIf="!currentRoom">
+            <p class="mat-body-1">You are not in a room right now. To play, pick a room from the available rooms. Two players are
+            needed to start a game. Please come back later if all rooms are full.</p>
+        </div>
+
+    </div>
+</div>
+
+<app-quest></app-quest>

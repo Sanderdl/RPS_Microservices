@@ -1,0 +1,7 @@
+
+<div style="position: fixed; top: 20px; left: 20px;">
+    <button *ngIf="!auth.isLoggedIn()" class="full-width" routerLink="login" mat-raised-button color="primary">Login</button>
+    <button *ngIf="auth.isLoggedIn()" (click)="auth.logout()" routerLink="login" class="full-width" mat-raised-button color="primary">Logout</button>
+</div>
+<router-outlet></router-outlet>
+
